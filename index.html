@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbase Proto Bridge</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .status { 
+            padding: 10px;
+            background: #e7f5e7;
+            border-radius: 5px;
+            color: #2d662d;
+            margin: 20px 0;
+        }
+        .endpoint {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .test-btn {
+            background: #0070f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .test-btn:hover {
+            background: #0051cc;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            display: none;
+        }
+        .success { background: #e7f5e7; color: #2d662d; }
+        .error { background: #fde7e7; color: #8b0000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌉 Chatbase Proto Bridge</h1>
+        <div class="status">✅ Service is running</div>
+        
+        <h2>API Endpoints:</h2>
+        <div class="endpoint">/api/chat - Main chat endpoint (POST)</div>
+        <div class="endpoint">/api/health - Health check (GET)</div>
+        
+        <h2>Quick Test:</h2>
+        <button class="test-btn" onclick="testHealth()">Test Health Endpoint</button>
+        <button class="test-btn" onclick="testChat()">Test Chat Endpoint</button>
+        
+        <div id="result"></div>
+        
+        <h2>Integration:</h2>
+        <p>Add this webhook URL to Proto Persona:</p>
+        <div class="endpoint" id="webhook-url"></div>
+    </div>
+
+    <script>
+        // Set the webhook URL
+        document.getElementById('webhook-url').textContent = window.location.origin + '/api/chat';
+        
+        async function testHealth() {
+            const result = document.getElementById('result');
+            result.style.display = 'block';
+            result.className = '';
+            result.textContent = 'Testing health endpoint...';
+            
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                result.className = 'success';
+                result.textContent = 'Health Check Result:\n' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.className = 'error';
+                result.textContent = 'Error: ' + error.message;
+            }
+        }
+        
+        async function testChat() {
+            const result = document.getElementById('result');
+            result.style.display = 'block';
+            result.className = '';
+            result.textContent = 'Testing chat endpoint...';
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: [
+                            { role: 'user', content: 'Hello, test message' }
+                        ],
+                        stream: false
+                    })
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.className = 'success';
+                    result.textContent = 'Chat Response:\n' + JSON.stringify(data, null, 2);
+                } else {
+                    result.className = 'error';
+                    result.textContent = 'Error Response:\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                result.className = 'error';
+                result.textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

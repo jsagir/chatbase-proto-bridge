@@ -1,0 +1,15 @@
+UPLOAD THESE 3 FILES TO GITHUB:
+
+1. Create a new file: api/health.js
+2. Create a new file: index.html  
+3. Update existing file: vercel.json
+
+You can either:
+- Copy the files from \\wsl$\Ubuntu\root\chatbase-proto-bridge\
+- Or create them manually on GitHub by copying the content below
+
+=== FILE 1: api/health.js ===
+(Create this inside the 'api' folder)
+
+Copy everything between the markers below:
+----------------------------------------
