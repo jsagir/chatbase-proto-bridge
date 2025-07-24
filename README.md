@@ -1,0 +1,1 @@
+# chatbase-proto-bridge
